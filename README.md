@@ -1,7 +1,8 @@
 SublimeWritingStyle
 ===================
 
-Improve your writing style with this Sublime Text package.
+Improve your writing style with this Sublime Text package. 
+Currently it requires Sublime Text 2; an update is required for ST3.
 
 Why Should I use this package?
 ------------------------------

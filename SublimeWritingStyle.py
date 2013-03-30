@@ -8,8 +8,7 @@ import sublime_plugin
 # Several snippets inspired by WordHighlight plugin for
 # Sublime Text (https://github.com/SublimeText/WordHighlight)
 
-# todo: proposal lingo, packaging, github.
-
+# todo: support ST3/Python 3.3
 
 weazel_word_regions = []
 passive_voice_regions = []
