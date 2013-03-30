@@ -1,0 +1,58 @@
+[
+	{
+		"id": "tools",
+		"caption": "Tools",
+		"children":
+		[
+			{
+				"id": "packages",
+				"caption": "Packages",
+				"children":
+				[
+					{
+						"id": "sublime_writing_style",
+						"caption": "SublimeWritingStyle",
+						"children":
+						[
+							{
+								"command": "toggle_sublime_writing_style"
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		"caption": "Preferences",
+		"mnemonic": "n",
+		"id": "preferences",
+		"children":
+		[
+			{
+				"caption": "Package Settings",
+				"mnemonic": "P",
+				"id": "package-settings",
+				"children":
+				[
+					{
+						"caption": "SublimeWritingStyle",
+						"children":
+						[
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/SublimeWritingStyle/SublimeWritingStyle.sublime-settings"},
+								"caption": "Settings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/User/SublimeWritingStyle.sublime-settings"},
+								"caption": "Settings – User"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]
