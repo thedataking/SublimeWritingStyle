@@ -1,10 +1,10 @@
 import sublime
 import sublime_plugin
 
-# Sublime Text 2 API reference: 
+# Sublime Text 2 API reference:
 # http://www.sublimetext.com/docs/2/api_reference.html
 
-# Acknowledgements: 
+# Acknowledgements:
 # Several snippets inspired by WordHighlight plugin for
 # Sublime Text (https://github.com/SublimeText/WordHighlight)
 
@@ -13,17 +13,20 @@ import sublime_plugin
 weazel_word_regions = []
 passive_voice_regions = []
 
+
 def mark_words(view, search_all=True):
     global settings, weazel_word_regions, passive_voice_regions
 
     def find_words(pattern):
         if search_all:
-            if settings.debug: print 'sublimewritingstyle: searching whole document'
+            if settings.debug:
+                print 'sublimewritingstyle: searching whole document'
             found_regions = view.find_all(pattern, sublime.IGNORECASE, '', [])
         else:
-            if settings.debug: print 'sublimewritingstyle: searching around visible region'
+            if settings.debug:
+                print 'sublimewritingstyle: searching around visible region'
             found_regions = []
-            chunk_size = 2 * 10**3
+            chunk_size = 2 * 10 ** 3
 
             visible_region = view.visible_region()
             begin = max(visible_region.begin() - chunk_size, 0)
@@ -50,24 +53,25 @@ def mark_words(view, search_all=True):
             # name, regions, style, symbol in gutter, draw outlined
             view.add_regions(style_key, new_regions, color_scope_name, symbol_name, True)
         return new_regions
-    
+
     # weazel words
     new_regions = find_words(settings.pattern)
     weazel_word_regions = lazy_mark_regions(
-        new_regions, 
-        regions, 
-        'SublimeWritingStyle', 
+        new_regions,
+        regions,
+        'SublimeWritingStyle',
         settings.color_scope_name,
         'dot')
 
     # passive words
     new_regions = find_words(settings.passive_voice_pattern)
     passive_voice_regions = lazy_mark_regions(
-        new_regions, 
-        passive_voice_regions, 
-        'SublimeWritingStyle-Passive', 
+        new_regions,
+        passive_voice_regions,
+        'SublimeWritingStyle-Passive',
         'string',
         'circle')
+
 
 class SublimeWritingStyleListener(sublime_plugin.EventListener):
     enabled = False
@@ -90,7 +94,7 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         determines if the package status changed. marks words when turned on.
         """
         global settings
-        
+
         # does settings enable package?
         if not settings.enabled:
             # ... no!
@@ -108,8 +112,7 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
                     mark_words(view)
                 return
 
-        SublimeWritingStyleListener.disable() # turn off for this file!
-
+        SublimeWritingStyleListener.disable()  # turn off for this file!
 
     def on_activated(self, view):
         if not view.is_loading():
@@ -125,7 +128,8 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         if SublimeWritingStyleListener.enabled:
             mark_words(view, search_all=False)
 
-def load_settings():    
+
+def load_settings():
     """
     runs when package loads.
     """
@@ -168,8 +172,9 @@ def load_settings():
     settings_base.add_on_change('sublimewritingstyle-reload', lambda: process_settings(settings))
 
     return settings
-    
-settings = load_settings() # read settings as package loads.
+
+settings = load_settings()  # read settings as package loads.
+
 
 class ToggleSublimeWritingStyle(sublime_plugin.ApplicationCommand):
     """
