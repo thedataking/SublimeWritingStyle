@@ -20,11 +20,11 @@ def mark_words(view, search_all=True):
     def find_words(pattern):
         if search_all:
             if settings.debug:
-                print 'sublimewritingstyle: searching whole document'
+                print('sublimewritingstyle: searching whole document')
             found_regions = view.find_all(pattern, sublime.IGNORECASE, '', [])
         else:
             if settings.debug:
-                print 'sublimewritingstyle: searching around visible region'
+                print('sublimewritingstyle: searching around visible region')
             found_regions = []
             chunk_size = 2 * 10 ** 3
 
@@ -58,7 +58,7 @@ def mark_words(view, search_all=True):
     new_regions = find_words(settings.pattern)
     weazel_word_regions = lazy_mark_regions(
         new_regions,
-        regions,
+        weazel_word_regions,
         'SublimeWritingStyle',
         settings.color_scope_name,
         'dot')
