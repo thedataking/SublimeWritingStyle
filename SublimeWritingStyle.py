@@ -8,7 +8,6 @@ import sublime_plugin
 # Several snippets inspired by WordHighlight plugin for
 # Sublime Text (https://github.com/SublimeText/WordHighlight)
 
-# todo: support ST3/Python 3.3
 
 weazel_word_regions = []
 passive_voice_regions = []
@@ -134,9 +133,6 @@ def load_settings():
     runs when package loads.
     """
     settings = sublime.load_settings('SublimeWritingStyle.sublime-settings')
-    settings_base_name = 'Preferences.sublime-settings' if int(sublime.version()) >= 2174 \
-        else 'Base File.sublime-settings'
-    settings_base = sublime.load_settings(settings_base_name)
 
     def process_settings(settings):
         """
@@ -154,8 +150,9 @@ def load_settings():
         setattr(settings, "enabled", settings.get("enabled", True))
         setattr(settings, "debug", settings.get("debug", False))
         weazel_words = settings.get("weazel_words", ["very", "clearly"])
-        extra_words = settings.get("extra_words", ["which"])
-        setattr(settings, "pattern", build_regex_from_wordlist(weazel_words + extra_words))
+        if settings.has("extra_words"):
+            weazel_words = weazel_words + settings.get("extra_words")
+        setattr(settings, "pattern", build_regex_from_wordlist(weazel_words))
         setattr(settings, "extensions", settings.get('extensions', ['.tex']))
         setattr(settings, "color_scope_name", settings.get('color_scope_name', "comment"))
         linking_verbs = settings.get('passive_voice_linking_verbs', ['be', 'being'])
@@ -168,12 +165,21 @@ def load_settings():
 
     # reload when package specific preferences changes
     settings.add_on_change('reload', lambda: process_settings(settings))
-    # reload when generic user preferences changes
-    settings_base.add_on_change('sublimewritingstyle-reload', lambda: process_settings(settings))
 
     return settings
 
-settings = load_settings()  # read settings as package loads.
+settings = None
+# only do this for ST2, use plugin_loaded for ST3.
+if int(sublime.version()) < 3000:
+    settings = load_settings()  # read settings as package loads.
+
+def plugin_loaded():
+    """
+    Seems that in ST3, plugins should read settings in this method. 
+    See: http://www.sublimetext.com/forum/viewtopic.php?f=6&t=15160
+    """
+    global settings
+    settings = load_settings()  # read settings as package loads.
 
 
 class ToggleSublimeWritingStyle(sublime_plugin.ApplicationCommand):
