@@ -19,7 +19,7 @@ Consider these two sentences:
 
 - The boy drove the car.
 
-Which one is simpler? (Hint, its the second, active one.) Using active voice simultaneously makes your text shorter and more engaging to the reader. Unfortunately, it takes some practice to spot passive sentences. 
+Which one is simpler? (Hint, it's the second, active one.) Using active voice simultaneously makes your text shorter and more engaging to the reader. Unfortunately, it takes some practice to spot passive sentences. 
 Passive voice indicators are forms of *to be* (am, is, are, was, were, be, been, being) plus another verb (often ending in *ed*).
 
 Second, this package highlights *weasel words*. Use these judgmental words sparingly. A few examples: *very, clearly, and, relatively*. 
