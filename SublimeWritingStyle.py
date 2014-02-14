@@ -156,7 +156,10 @@ def load_settings():
         if settings.has("extra_words"):
             weasel_words = weasel_words + settings.get("extra_words")
         setattr(settings, "pattern", build_regex_from_wordlist(weasel_words))
-        setattr(settings, "extensions", settings.get('extensions', ['.tex']))
+        extensions = settings.get('extensions', ['.tex'])
+        if settings.has("extra_extensions"):
+            extensions = settings.get('extra_extensions')
+        setattr(settings, "extensions", extensions)
         setattr(settings, "color_scope_name", settings.get('color_scope_name', "comment"))
         linking_verbs = settings.get('passive_voice_linking_verbs', ['be', 'being'])
         irregulars = settings.get('passive_voice_irregulars', ['chosen', 'kept'])

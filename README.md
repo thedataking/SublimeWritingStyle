@@ -30,6 +30,7 @@ How Can I Configure What gets Highlighted?
 ------------------------------------------
 Create (or open) a file called ```SublimeWritingStyle.sublime-settings``` in your Packages/User directory.
 For instance, you can add extra weasel words using the ```extra_words``` key or overwrite existing weasel words using the ```weasel_words``` key.
+You can enable the plugin on additional file types using the ```extra_extensions``` key.
 
 Who Inspired This Package?
 --------------------------
