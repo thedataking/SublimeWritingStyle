@@ -26,6 +26,13 @@ Second, this package highlights *weasel words*. Use these judgmental words spari
 
 Both the list of passive voice indicators and weasel words are customizable using Sublime Text settings files.  Use the `extra_words` settings key to define additional highlighted words.
 
-Who inspired this package?
+How Can I Configure What gets Highlighted?
+------------------------------------------
+Create (or open) a file called ```SublimeWritingStyle.sublime-settings``` in your Packages/User directory.
+For instance, you can add extra weasel words using the ```extra_words``` key or overwrite existing weasel words using the ```weasel_words``` key.
+You can enable the plugin on additional file types using the ```extra_extensions``` key.
+
+Who Inspired This Package?
 --------------------------
+
 [Stefan Brunthaler](http://www.ics.uci.edu/~sbruntha/) extended the [writegood-mode](https://github.com/bnbeckwith/writegood-mode) for [Emacs](http://www.gnu.org/software/emacs/) in a similar fashion.

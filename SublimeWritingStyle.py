@@ -8,13 +8,16 @@ import sublime_plugin
 # Several snippets inspired by WordHighlight plugin for
 # Sublime Text (https://github.com/SublimeText/WordHighlight)
 
+# TODO: detect long and complex sentences
+# TODO: detect adverbs
+# TODO: detect patterns that can be simplified
 
-weazel_word_regions = []
+weasel_word_regions = []
 passive_voice_regions = []
 
 
 def mark_words(view, search_all=True):
-    global settings, weazel_word_regions, passive_voice_regions
+    global settings, weasel_word_regions, passive_voice_regions
 
     def find_words(pattern):
         if search_all:
@@ -53,11 +56,11 @@ def mark_words(view, search_all=True):
             view.add_regions(style_key, new_regions, color_scope_name, symbol_name, True)
         return new_regions
 
-    # weazel words
+    # weasel words
     new_regions = find_words(settings.pattern)
-    weazel_word_regions = lazy_mark_regions(
+    weasel_word_regions = lazy_mark_regions(
         new_regions,
-        weazel_word_regions,
+        weasel_word_regions,
         'SublimeWritingStyle',
         settings.color_scope_name,
         'dot')
@@ -149,11 +152,14 @@ def load_settings():
 
         setattr(settings, "enabled", settings.get("enabled", True))
         setattr(settings, "debug", settings.get("debug", False))
-        weazel_words = settings.get("weazel_words", ["very", "clearly"])
+        weasel_words = settings.get("weasel_words", ["many", "clearly"])
         if settings.has("extra_words"):
-            weazel_words = weazel_words + settings.get("extra_words")
-        setattr(settings, "pattern", build_regex_from_wordlist(weazel_words))
-        setattr(settings, "extensions", settings.get('extensions', ['.tex']))
+            weasel_words = weasel_words + settings.get("extra_words")
+        setattr(settings, "pattern", build_regex_from_wordlist(weasel_words))
+        extensions = settings.get('extensions', ['.tex'])
+        if settings.has("extra_extensions"):
+            extensions = settings.get('extra_extensions')
+        setattr(settings, "extensions", extensions)
         setattr(settings, "color_scope_name", settings.get('color_scope_name', "comment"))
         linking_verbs = settings.get('passive_voice_linking_verbs', ['be', 'being'])
         irregulars = settings.get('passive_voice_irregulars', ['chosen', 'kept'])
