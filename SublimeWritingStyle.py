@@ -1,3 +1,4 @@
+import sys
 import sublime
 import sublime_plugin
 
@@ -10,14 +11,17 @@ import sublime_plugin
 
 # TODO: detect long and complex sentences
 # TODO: detect adverbs
-# TODO: detect patterns that can be simplified
+# TODO: improve detection of patterns to be simplified (support regexes)
+# TODO: find more patterns that can be simplified
 
 weasel_word_regions = []
 passive_voice_regions = []
+simplify_regions = []
+settings = None
 
 
 def mark_words(view, search_all=True):
-    global settings, weasel_word_regions, passive_voice_regions
+    global settings, weasel_word_regions, passive_voice_regions, simplify_regions
 
     def find_words(pattern):
         if search_all:
@@ -39,6 +43,7 @@ def mark_words(view, search_all=True):
                 if region:
                     found_regions.append(region)
                     rend = region.end()
+
                     if rend > end:
                         break
                     else:
@@ -65,6 +70,15 @@ def mark_words(view, search_all=True):
         settings.color_scope_name,
         'dot')
 
+    # simplify patterns
+    new_regions = find_words(settings.simplify_pattern)
+    simplify_regions = lazy_mark_regions(
+        new_regions,
+        simplify_regions,
+        'SublimeWritingStyle-Simplify',
+        'invalid',
+        'circle')
+
     # passive words
     new_regions = find_words(settings.passive_voice_pattern)
     passive_voice_regions = lazy_mark_regions(
@@ -73,6 +87,8 @@ def mark_words(view, search_all=True):
         'SublimeWritingStyle-Passive',
         'string',
         'circle')
+
+    print('sublimewritingstyle: done updating words')
 
 
 class SublimeWritingStyleListener(sublime_plugin.EventListener):
@@ -89,6 +105,7 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
             view = window.active_view()
             if view:
                 view.erase_regions("SublimeWritingStyle")
+                view.erase_regions("SublimeWritingStyle-Simplify")
                 view.erase_regions("SublimeWritingStyle-Passive")
 
     def handle_event(self, view):
@@ -101,6 +118,8 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         if not settings.enabled:
             # ... no!
             SublimeWritingStyleListener.disable()
+            if settings.debug:
+                print('sublimewritingstyle: not enabled for %s' % view.file_name())
             return
 
         # is package enabled for this file type?
@@ -108,10 +127,11 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         for ext in settings.extensions:
             if file_name and file_name.endswith(ext):
                 # ... yes!
+                # print('sublimewritingstyle: handling event')
                 if not SublimeWritingStyleListener.enabled:
                     # enabling... mark words.
                     SublimeWritingStyleListener.enabled = True
-                    mark_words(view)
+                mark_words(view)
                 return
 
         SublimeWritingStyleListener.disable()  # turn off for this file!
@@ -129,6 +149,23 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
     def on_modified(self, view):
         if SublimeWritingStyleListener.enabled:
             mark_words(view, search_all=False)
+
+    def on_selection_modified(self, view):
+        """Check if selection includes patterns that can be simplified."""
+        global settings, simplify_regions
+
+        for region in view.sel():
+            for s in simplify_regions:
+                if s.intersects(region):
+                    orig = view.substr(s)
+                    key = orig.lower()
+                    if key in settings.simplify_pattern_replacements:
+                        value = settings.simplify_pattern_replacements[key]
+                        view.erase_status("simplify")
+                        view.set_status("simplify", "'%s' -> '%s'" % (orig, value))
+                    return
+        # simplify region not found
+        view.erase_status("simplify")
 
 
 def load_settings():
@@ -152,15 +189,28 @@ def load_settings():
 
         setattr(settings, "enabled", settings.get("enabled", True))
         setattr(settings, "debug", settings.get("debug", False))
+
+        # weasel words
         weasel_words = settings.get("weasel_words", ["many", "clearly"])
         if settings.has("extra_words"):
             weasel_words = weasel_words + settings.get("extra_words")
         setattr(settings, "pattern", build_regex_from_wordlist(weasel_words))
+
+        # patterns to simplify
+        simplify_patterns = settings.get("simplify_patterns", {"in order to": "to"})
+        simplify_words = [w for w in simplify_patterns.keys()]
+        print('simplifying %s' % simplify_words)
+        setattr(settings, "simplify_pattern", build_regex_from_wordlist(simplify_words))
+        setattr(settings, "simplify_pattern_replacements", simplify_patterns)
+
+        # extensions to enable plugin on
         extensions = settings.get('extensions', ['.tex'])
         if settings.has("extra_extensions"):
-            extensions = settings.get('extra_extensions')
+            extensions = extensions + settings.get('extra_extensions')
         setattr(settings, "extensions", extensions)
         setattr(settings, "color_scope_name", settings.get('color_scope_name', "comment"))
+
+        # passive voice patterns
         linking_verbs = settings.get('passive_voice_linking_verbs', ['be', 'being'])
         irregulars = settings.get('passive_voice_irregulars', ['chosen', 'kept'])
         setattr(settings, "passive_voice_pattern", build_passive_voice_regex(linking_verbs, irregulars))
@@ -174,11 +224,6 @@ def load_settings():
 
     return settings
 
-settings = None
-# only do this for ST2, use plugin_loaded for ST3.
-if int(sublime.version()) < 3000:
-    settings = load_settings()  # read settings as package loads.
-
 def plugin_loaded():
     """
     Seems that in ST3, plugins should read settings in this method. 
@@ -187,6 +232,9 @@ def plugin_loaded():
     global settings
     settings = load_settings()  # read settings as package loads.
 
+# ST2 support
+if sys.version_info[0] == 2:
+    plugin_loaded()
 
 class ToggleSublimeWritingStyle(sublime_plugin.ApplicationCommand):
     """
@@ -197,6 +245,7 @@ class ToggleSublimeWritingStyle(sublime_plugin.ApplicationCommand):
         settings.enabled = not settings.enabled
         if not settings.enabled:
             sublime.active_window().active_view().erase_regions("SublimeWritingStyle")
+            sublime.active_window().active_view().erase_regions("SublimeWritingStyle-Simplify")
             sublime.active_window().active_view().erase_regions("SublimeWritingStyle-Passive")
         else:
             mark_words(sublime.active_window().active_view())

@@ -35,6 +35,11 @@
 	],
 	// "\\b\\(am\\|are\\|were\\|being\\|is\\|been\\|was\\|be\\)\\b\\([[:space:]]\\|\\s<\\|\\s>\\)+\\([[:word:]]+ed\\|"
 	"passive_voice_linking_verbs": ["am", "are", "were", "being", "is", "been", "was", "be"],
+	"simplify_patterns" : {
+	    "in order to": "to",
+	    "so as to": "to",
+	    "in excess of": "more than"
+	},
 	"extensions": [".py", ".tex", ".md", ".mdown", ".markdown", ".txt"],
 	"enabled": true
 }
