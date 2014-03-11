@@ -148,7 +148,8 @@ def load_settings():
         def build_regex_from_wordlist(words):
             word_to_expr = lambda w: r'(?<!\w)' + w + r'(?!\w)'
             exprs = map(word_to_expr, words)
-            return "|".join(exprs)
+            duplicate_words_regex = r'\b(\w+)\s\1\b'
+            return "|".join(exprs) + "|" + duplicate_words_regex
 
         setattr(settings, "enabled", settings.get("enabled", True))
         setattr(settings, "debug", settings.get("debug", False))
