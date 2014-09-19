@@ -120,8 +120,8 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         if (not allowed_extensions) or ext in allowed_extensions:
             if not SublimeWritingStyleListener.enabled:
                 SublimeWritingStyleListener.enabled = True
-                mark_words(view)
 
+            mark_words(view)
             return
 
         SublimeWritingStyleListener.disable()  # turn off for this file!
