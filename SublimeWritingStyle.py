@@ -1,3 +1,4 @@
+import os.path
 import sublime
 import sublime_plugin
 
@@ -103,16 +104,25 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
             SublimeWritingStyleListener.disable()
             return
 
-        # is package enabled for this file type?
+        # check this file if either it's enabled or if the extensions list is empty
         file_name = view.file_name()
-        for ext in settings.extensions:
-            if file_name and file_name.endswith(ext):
-                # ... yes!
-                if not SublimeWritingStyleListener.enabled:
-                    # enabling... mark words.
-                    SublimeWritingStyleListener.enabled = True
-                    mark_words(view)
-                return
+
+        ext = ''
+        if file_name:
+            # Use the extension if it exists, otherwise use the whole filename
+            ext = os.path.splitext(file_name)
+            if ext[1]:
+                ext = ext[1]
+            else:
+                ext = os.path.split(file_name)[1]
+
+        allowed_extensions = settings.get('extensions')
+        if (not allowed_extensions) or ext in allowed_extensions:
+            if not SublimeWritingStyleListener.enabled:
+                SublimeWritingStyleListener.enabled = True
+                mark_words(view)
+
+            return
 
         SublimeWritingStyleListener.disable()  # turn off for this file!
 
@@ -182,7 +192,7 @@ if int(sublime.version()) < 3000:
 
 def plugin_loaded():
     """
-    Seems that in ST3, plugins should read settings in this method. 
+    Seems that in ST3, plugins should read settings in this method.
     See: http://www.sublimetext.com/forum/viewtopic.php?f=6&t=15160
     """
     global settings
