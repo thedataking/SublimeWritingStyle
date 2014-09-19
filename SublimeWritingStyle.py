@@ -36,7 +36,7 @@ def mark_words(view, search_all=True):
             end = min(visible_region.end() + chunk_size, view.size())
             from_point = begin
             while True:
-                region = view.find(pattern, from_point)
+                region = view.find(pattern, from_point, sublime.IGNORECASE)
                 if region:
                     found_regions.append(region)
                     rend = region.end()
