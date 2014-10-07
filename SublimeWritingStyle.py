@@ -53,7 +53,7 @@ def mark_words(view, search_all=True):
             # print 'adding new regions'
             view.erase_regions(style_key)
             # name, regions, style, symbol in gutter, draw outlined
-            view.add_regions(style_key, new_regions, color_scope_name, symbol_name, True)
+            view.add_regions(style_key, new_regions, color_scope_name, symbol_name, sublime.DRAW_STIPPLED_UNDERLINE)
         return new_regions
 
     # weasel words
