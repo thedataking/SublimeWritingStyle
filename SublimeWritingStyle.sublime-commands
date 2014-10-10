@@ -1,0 +1,3 @@
+[
+    { "caption": "Toggle Writing Style", "command": "toggle_sublime_writing_style" }
+]
