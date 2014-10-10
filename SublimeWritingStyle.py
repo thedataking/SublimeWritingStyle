@@ -49,12 +49,12 @@ def mark_words(view, search_all=True):
         return found_regions
         # end of find_words
 
-    def lazy_mark_regions(new_regions, old_regions, style_key, color_scope_name, symbol_name):
+    def lazy_mark_regions(new_regions, old_regions, style_key, color_scope_name, symbol_name, draw_style):
         if old_regions != new_regions or True:
             # print 'adding new regions'
             view.erase_regions(style_key)
             # name, regions, style, symbol in gutter, draw outlined
-            view.add_regions(style_key, new_regions, color_scope_name, symbol_name, True)
+            view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style)
         return new_regions
 
     # weasel words
@@ -64,7 +64,8 @@ def mark_words(view, search_all=True):
         weasel_word_regions,
         'SublimeWritingStyle',
         settings.color_scope_name,
-        'dot')
+        'Packages/SublimeWritingStyle/icons/mistake_1.png',
+        sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE + sublime.DRAW_SQUIGGLY_UNDERLINE)
 
     # passive words
     new_regions = find_words(settings.passive_voice_pattern)
@@ -73,7 +74,8 @@ def mark_words(view, search_all=True):
         passive_voice_regions,
         'SublimeWritingStyle-Passive',
         'string',
-        'circle')
+        'Packages/SublimeWritingStyle/icons/mistake_2.png',
+        sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE  + sublime.DRAW_STIPPLED_UNDERLINE)
 
 
 class SublimeWritingStyleListener(sublime_plugin.EventListener):
