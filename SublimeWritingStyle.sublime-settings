@@ -35,6 +35,6 @@
 	],
 	// "\\b\\(am\\|are\\|were\\|being\\|is\\|been\\|was\\|be\\)\\b\\([[:space:]]\\|\\s<\\|\\s>\\)+\\([[:word:]]+ed\\|"
 	"passive_voice_linking_verbs": ["am", "are", "were", "being", "is", "been", "was", "be"],
-	"extensions": [".py", ".tex", ".md", ".mdown", ".markdown", ".txt"],
+	"extensions": [".py", ".tex", ".md", ".mdown", ".markdown", ".txt", ".rst"],
 	"enabled": true
 }
