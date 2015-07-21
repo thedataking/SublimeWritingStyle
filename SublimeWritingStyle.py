@@ -64,7 +64,7 @@ def mark_words(view, search_all=True):
         weasel_word_regions,
         'SublimeWritingStyle',
         settings.color_scope_name,
-        'Packages/SublimeWritingStyle/icons/mistake_1.png',
+        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'mistake_1.png'),
         sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE + sublime.DRAW_SQUIGGLY_UNDERLINE)
 
     # passive words
@@ -74,7 +74,7 @@ def mark_words(view, search_all=True):
         passive_voice_regions,
         'SublimeWritingStyle-Passive',
         'string',
-        'Packages/SublimeWritingStyle/icons/mistake_2.png',
+        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'mistake_2.png'),
         sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE  + sublime.DRAW_STIPPLED_UNDERLINE)
 
 
