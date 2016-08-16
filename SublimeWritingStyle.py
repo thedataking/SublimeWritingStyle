@@ -16,7 +16,6 @@ import sublime_plugin
 weasel_word_regions = []
 passive_voice_regions = []
 
-
 def mark_words(view, search_all=True):
     global settings, weasel_word_regions, passive_voice_regions
 
@@ -56,26 +55,27 @@ def mark_words(view, search_all=True):
             # name, regions, style, symbol in gutter, draw outlined
             view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style)
         return new_regions
-
-    # weasel words
-    new_regions = find_words(settings.pattern)
-    weasel_word_regions = lazy_mark_regions(
-        new_regions,
-        weasel_word_regions,
-        'SublimeWritingStyle',
-        settings.color_scope_name,
-        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'mistake_1.png'),
-        sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE + sublime.DRAW_SQUIGGLY_UNDERLINE)
+        # end of lazy_mark_regions
 
     # passive words
     new_regions = find_words(settings.passive_voice_pattern)
     passive_voice_regions = lazy_mark_regions(
         new_regions,
         passive_voice_regions,
-        'SublimeWritingStyle-Passive',
-        'string',
-        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'mistake_2.png'),
+        'SublimeWritingStyle.Passive',
+        'writingstyle.passive',
+        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'pencil-dark.png' if settings.theme == 'dark' else 'pencil-light.png'),
         sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE  + sublime.DRAW_STIPPLED_UNDERLINE)
+
+    # weasel words
+    new_regions = find_words(settings.pattern)
+    weasel_word_regions = lazy_mark_regions(
+        new_regions,
+        weasel_word_regions,
+        'SublimeWritingStyle.Weasel',
+        'writingstyle.weasel',
+        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'weasel-dark.png' if settings.theme == 'dark' else 'weasel-light.png'),
+        sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE + sublime.DRAW_SQUIGGLY_UNDERLINE)
 
 
 class SublimeWritingStyleListener(sublime_plugin.EventListener):
@@ -91,8 +91,8 @@ class SublimeWritingStyleListener(sublime_plugin.EventListener):
         if window:
             view = window.active_view()
             if view:
-                view.erase_regions("SublimeWritingStyle")
-                view.erase_regions("SublimeWritingStyle-Passive")
+                view.erase_regions("SublimeWritingStyle.Passive")
+                view.erase_regions("SublimeWritingStyle.Weasel")
 
     def handle_event(self, view):
         """
@@ -153,7 +153,6 @@ def load_settings():
         """
         add properties reflecting the loaded settings.
         """
-
         def build_passive_voice_regex(linking_verbs, irregulars):
             return r'(?<!\w)(' + '|'.join(linking_verbs) + r')\s+(\w+ed|' + '|'.join(irregulars) + r')(?!\w)'
 
@@ -165,15 +164,18 @@ def load_settings():
 
         setattr(settings, "enabled", settings.get("enabled", True))
         setattr(settings, "debug", settings.get("debug", False))
+        setattr(settings, "theme", settings.get("theme", "dark"))
+
         weasel_words = settings.get("weasel_words", ["many", "clearly"])
         if settings.has("extra_words"):
             weasel_words = weasel_words + settings.get("extra_words")
         setattr(settings, "pattern", build_regex_from_wordlist(weasel_words))
+
         extensions = settings.get('extensions', ['.tex'])
         if settings.has("extra_extensions"):
             extensions = extensions + settings.get('extra_extensions')
         setattr(settings, "extensions", extensions)
-        setattr(settings, "color_scope_name", settings.get('color_scope_name', "comment"))
+
         linking_verbs = settings.get('passive_voice_linking_verbs', ['be', 'being'])
         irregulars = settings.get('passive_voice_irregulars', ['chosen', 'kept'])
         setattr(settings, "passive_voice_pattern", build_passive_voice_regex(linking_verbs, irregulars))
@@ -209,8 +211,8 @@ class ToggleSublimeWritingStyle(sublime_plugin.ApplicationCommand):
         global settings
         settings.enabled = not settings.enabled
         if not settings.enabled:
-            sublime.active_window().active_view().erase_regions("SublimeWritingStyle")
-            sublime.active_window().active_view().erase_regions("SublimeWritingStyle-Passive")
+            sublime.active_window().active_view().erase_regions("SublimeWritingStyle.Passive")
+            sublime.active_window().active_view().erase_regions("SublimeWritingStyle.Weasel")
         else:
             mark_words(sublime.active_window().active_view())
 
