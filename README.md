@@ -40,8 +40,9 @@ How to Install
 
 1. Open the `Preferences > Browse Packages…` menu
 2. Browse up a folder and then into the `Installed Packages/` folder
-3. Download [zip archive][zip] rename it to `SublimeWritingStyle.sublime-package` and copy it into the `Installed Packages/` directory
-4. Restart Sublime Text
+3. Download [zip archive][zip], rename it to `SublimeWritingStyle.sublime-package` and copy it into the `Installed Packages/` directory
+4. Copy the same zip archive into the `Packages/` folder, extract it there, rename the folder to `SublimeWritingStyle`, and delete the zip archive  
+5. Restart Sublime Text
 
 How Can I Configure What gets Highlighted?
 ------------------------------------------
@@ -104,4 +105,4 @@ Icons made by [Freepik][2] from [www.flaticon.com][3] is licensed by [Creative C
  [2]: http://www.freepik.com
  [3]: http://www.flaticon.com
  [4]: http://creativecommons.org/licenses/by/3.0/
- [zip]: https://github.com/revolunet/sublimetext-markdown-preview/archive/master.zip
+ [zip]: https://github.com/thedataking/SublimeWritingStyle/archive/master.zip
