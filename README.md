@@ -58,11 +58,8 @@ The icons come in dark and light versions. You can switch this by adding this to
 "theme": "light"
 ```
 
-or
+Valid theme values are: `light`, `dark`, and `none`. The last option turns off gutter icons.
 
-```json
-"theme": "dark"
-```
 
 Add this to your theme, and adjust the colors as necessary:
 
