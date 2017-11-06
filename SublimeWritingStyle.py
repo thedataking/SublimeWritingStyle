@@ -53,7 +53,10 @@ def mark_words(view, search_all=True):
             # print 'adding new regions'
             view.erase_regions(style_key)
             # name, regions, style, symbol in gutter, draw outlined
-            view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style)
+            if settings.theme == 'none':
+                view.add_regions(style_key, new_regions, color_scope_name, flags = draw_style)
+            else:
+                view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style) 
         return new_regions
         # end of lazy_mark_regions
 
