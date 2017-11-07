@@ -41,7 +41,7 @@
 						[
 							{
 								"command": "open_file",
-								"args": {"file": "${packages}/SublimeWritingStyle/SublimeWritingStyle.sublime-settings"},
+								"args": {"file": "${packages}/Writing Style/SublimeWritingStyle.sublime-settings"},
 								"caption": "Settings – Default"
 							},
 							{
