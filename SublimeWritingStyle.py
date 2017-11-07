@@ -56,7 +56,7 @@ def mark_words(view, search_all=True):
             if settings.theme == 'none':
                 view.add_regions(style_key, new_regions, color_scope_name, flags = draw_style)
             else:
-                view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style) 
+                view.add_regions(style_key, new_regions, color_scope_name, symbol_name, draw_style)
         return new_regions
         # end of lazy_mark_regions
 
@@ -67,7 +67,7 @@ def mark_words(view, search_all=True):
         passive_voice_regions,
         'SublimeWritingStyle.Passive',
         'writingstyle.passive',
-        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'pencil-dark.png' if settings.theme == 'dark' else 'pencil-light.png'),
+        os.path.join('Packages', 'Writing Style', 'icons', 'pencil-dark.png' if settings.theme == 'dark' else 'pencil-light.png'),
         sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE  + sublime.DRAW_STIPPLED_UNDERLINE)
 
     # weasel words
@@ -77,7 +77,7 @@ def mark_words(view, search_all=True):
         weasel_word_regions,
         'SublimeWritingStyle.Weasel',
         'writingstyle.weasel',
-        os.path.join('Packages', 'SublimeWritingStyle', 'icons', 'weasel-dark.png' if settings.theme == 'dark' else 'weasel-light.png'),
+        os.path.join('Packages', 'Writing Style', 'icons', 'weasel-dark.png' if settings.theme == 'dark' else 'weasel-light.png'),
         sublime.DRAW_NO_FILL + sublime.DRAW_NO_OUTLINE + sublime.DRAW_SQUIGGLY_UNDERLINE)
 
 
